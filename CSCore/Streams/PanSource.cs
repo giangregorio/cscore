@@ -60,16 +60,20 @@ namespace CSCore.Streams
         public override int Read(float[] buffer, int offset, int count)
         {
             int read = base.Read(buffer, offset, count);
-            if (read % 2 != 0)
-                throw new InvalidOperationException("Read samples has to be a multiple of two.");
 
-            float left = Math.Min(1, Pan + 1);
-            float right = Math.Abs(Math.Max(-1, Pan - 1));
-
-            for (int i = offset; i < offset + read; )
+            if (IsEnabled)
             {
-                buffer[i++] *= left;
-                buffer[i++] *= right;
+                if (read % 2 != 0)
+                    throw new InvalidOperationException("Read samples has to be a multiple of two.");
+
+                float left = Math.Min(1, Pan + 1);
+                float right = Math.Abs(Math.Max(-1, Pan - 1));
+
+                for (int i = offset; i < offset + read;)
+                {
+                    buffer[i++] *= left;
+                    buffer[i++] *= right;
+                }
             }
 
             return read;

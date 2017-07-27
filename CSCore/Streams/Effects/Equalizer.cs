@@ -108,17 +108,20 @@ namespace CSCore.Streams.Effects
         {
             int read = base.Read(buffer, offset, count);
 
-            for (int c = 0; c < WaveFormat.Channels; c++)
+            if (IsEnabled)
             {
-                for (int i = _equalizerFilters.Count; i-- > 0;)
+                for (int c = 0; c < WaveFormat.Channels; c++)
                 {
-                    _equalizerFilters[i].Filters[c].Process(buffer, offset, read, c, WaveFormat.Channels);
+                    for (int i = _equalizerFilters.Count; i-- > 0;)
+                    {
+                        _equalizerFilters[i].Filters[c].Process(buffer, offset, read, c, WaveFormat.Channels);
+                    }
                 }
-            }
 
-            for (int n = offset; n < count; n++)
-            {
-                buffer[n] = Math.Max(-1, Math.Min(buffer[n], 1));
+                for (int n = offset; n < count; n++)
+                {
+                    buffer[n] = Math.Max(-1, Math.Min(buffer[n], 1));
+                }
             }
 
             return read;

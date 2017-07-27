@@ -106,6 +106,23 @@ namespace CSCore
             }
         }
 
+        private bool _isEnabled = true;
+        /// <summary>
+        ///     Gets or sets whether the sample Read should be transparent or no
+        /// </summary>
+        public bool IsEnabled
+        {
+            get
+            {
+                return _isEnabled;
+            }
+            set
+            {
+                _isEnabled = value;
+            }
+        }
+
+
         /// <summary>
         ///     Gets or sets a value which indicates whether to dispose the <see cref="BaseSource" />
         ///     on calling <see cref="Dispose(bool)" />.
