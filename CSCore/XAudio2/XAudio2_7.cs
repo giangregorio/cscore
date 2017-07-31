@@ -253,20 +253,20 @@ namespace CSCore.XAudio2
             {
                 ptr = Marshal.GetComInterfaceForObject(callback, typeof(IXAudio2EngineCallback));
                 ptr = Utils.CSCoreUtils.GetComInterfaceForObjectWithAdjustedVtable(ptr, 3, 3);
-            }
-            try
-            {
-                InteropCalls.CallI(UnsafeBasePtr, (void*) ptr, ((void**) (*(void**) UnsafeBasePtr))[7]);
-            }
-            finally
-            {
-                if (ptr != IntPtr.Zero)
+                try
                 {
-                    //while patching the IUnknown-members out of the vtable, we've made a backup of the release pointer,
-                    //which gets called here -> the Marshal.Release method would call any function on index 2 of the vtable
-                    //we've patched there
-                    Utils.CSCoreUtils.Release(ptr);
-                    //Marshal.Release(ptr);
+                    InteropCalls.CallI(UnsafeBasePtr, (void*)ptr, ((void**)(*(void**)UnsafeBasePtr))[7]);
+                }
+                finally
+                {
+                    if (ptr != IntPtr.Zero)
+                    {
+                        //while patching the IUnknown-members out of the vtable, we've made a backup of the release pointer,
+                        //which gets called here -> the Marshal.Release method would call any function on index 2 of the vtable
+                        //we've patched there
+                        Utils.CSCoreUtils.Release(ptr);
+                        //Marshal.Release(ptr);
+                    }
                 }
             }
         }
