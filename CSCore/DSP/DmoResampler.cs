@@ -183,7 +183,7 @@ namespace CSCore.DSP
             lock (LockObj)
             {
                 int read = 0;
-                while (read < count)
+                //while (read < count)
                 {
                     MediaObject mediaObject = Resampler.MediaObject;
                     if (mediaObject.IsReadyForInput(0))
@@ -192,10 +192,10 @@ namespace CSCore.DSP
                         _readBuffer = _readBuffer.CheckBuffer(bytesToRead);
                         int bytesRead = base.Read(_readBuffer, 0, bytesToRead);
                         if (bytesRead <= 0)
-                            break;
+                            return 0;
 
-                        if (_disposed)
-                            break;
+                        //if (_disposed)
+                        //    break;
 
                         if (InputBuffer.MaxLength < bytesRead)
                         {
