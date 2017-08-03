@@ -7,6 +7,7 @@ namespace CSCore.Utils
 {
     internal static class CSCoreUtils
     {
+        private static object locker = new object();
         private static readonly Dictionary<IntPtr, PatchedVtable> _patchedVtables = new Dictionary<IntPtr, PatchedVtable>();
 
         public static bool IsGreaterEqualCSCore12
@@ -27,12 +28,15 @@ namespace CSCore.Utils
             IntPtr z = new IntPtr(pp);
 
             //since the same vtable applies to all com objects of the same type -> make sure to only patch it once
-            if (_patchedVtables.ContainsKey(z))
+            lock (locker)
             {
-                return ptr;
-            }
+                if (_patchedVtables.ContainsKey(z))
+                {
+                    return ptr;
+                }
 
-            _patchedVtables.Add(z, new PatchedVtable(pp));
+                _patchedVtables.Add(z, new PatchedVtable(pp));
+            }
 
             for (int i = 0; i < finalVtableLength; i++)
             {
@@ -56,10 +60,13 @@ namespace CSCore.Utils
 
             IntPtr z = new IntPtr(pp);
 
-            PatchedVtable vtable;
-            if (_patchedVtables.TryGetValue(z, out vtable))
+            lock (locker)
             {
-                return vtable.ReleaseFunc(ptr);
+                PatchedVtable vtable;
+                if (_patchedVtables.TryGetValue(z, out vtable))
+                {
+                    return vtable.ReleaseFunc(ptr);
+                }
             }
 
             return 0;
