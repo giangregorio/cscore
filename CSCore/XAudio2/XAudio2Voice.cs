@@ -930,7 +930,8 @@ namespace CSCore.XAudio2
         /// </summary>
         public unsafe void DestroyVoice()
         {
-            InteropCalls.CallI2(UnsafeBasePtr, ((void**) (*(void**) UnsafeBasePtr))[18]);
+            if (UnsafeBasePtr != null)
+                InteropCalls.CallI2(UnsafeBasePtr, ((void**) (*(void**) UnsafeBasePtr))[18]);
         }
 
         private bool _disposed;
